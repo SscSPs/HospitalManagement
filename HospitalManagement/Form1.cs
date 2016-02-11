@@ -16,5 +16,16 @@ namespace HospitalManagement
         {
             InitializeComponent();
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Enter your Username");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Trying to login...");
+
+        }
     }
 }
