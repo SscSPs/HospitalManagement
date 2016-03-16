@@ -15,6 +15,7 @@ namespace HospitalManagement
         public Form1()
         {
             InitializeComponent();
+            
         }
         
         private void label1_Click(object sender, EventArgs e)
@@ -23,11 +24,17 @@ namespace HospitalManagement
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Trying to login...");
-            Form2 form2 = new Form2() ;
-            form2.Show();
-            this.Hide();
-            
+            if (login(textBox1.Text,textBox2.Text))
+            {
+                MessageBox.Show("Trying to login...");
+                Form2 form2 = new Form2();
+                form2.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("wrong credentials");
+            }
         }
 
         public void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -46,6 +53,28 @@ namespace HospitalManagement
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Application.Exit();
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+        private bool login (String username,String password)
+        {
+            if (textBox1.Text == "Admin" && textBox2.Text == "password")
+                return true;
+            else return false;
         }
     }
 }
