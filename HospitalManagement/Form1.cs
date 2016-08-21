@@ -1,62 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace HospitalManagement
 {
+
     public partial class Form1 : Form
     {
+        static string connectionstring =
+            "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\pavilion\\Documents\\hospitalManagement.mdf;Integrated Security=True;Connect Timeout=30";
+
+
+        SqlConnection myConnection  = new SqlConnection(connectionstring);
+        SqlDataReader b;
+
         public Form1()
         {
             InitializeComponent();
             
         }
-        
+
         private void label1_Click(object sender, EventArgs e)
         {
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (login(textBox1.Text,textBox2.Text))
+            if(textBox1.Text != "")
+            if (login(textBox1.Text, textBox2.Text))
             {
-                MessageBox.Show("Trying to login...");
-                Form2 form2 = new Form2();
+                MessageBox.Show("Login Successsful");
+                myConnection.Close();
+                Form2 form2 = new Form2(true, textBox1.Text);
                 form2.Show();
                 this.Hide();
             }
             else
             {
-                MessageBox.Show("wrong credentials");
+                MessageBox.Show("Wrong Credentials");
+                textBox2.Text = "";
+                textBox1.Focus();
+                textBox1.SelectAll();
             }
         }
 
-        public void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox1.Checked == true)
-                MessageBox.Show("Do other people use this pc to use this software? If yes, We recomend not to use this feature!", "Are you sure?", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-        }
-
-
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            myConnection.Open();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            myConnection.Close(); 
             this.Close();
             Application.Exit();
         }
@@ -70,11 +69,55 @@ namespace HospitalManagement
         {
 
         }
+
         private bool login (String username,String password)
         {
-            if (textBox1.Text == "Admin" && textBox2.Text == "password")
-                return true;
-            else return false;
+            string com1 = "select * from LoginAccess where username = '" + username + "'";
+            if (username.Substring(0, 1) == "\'" || username.Substring(0, 1) == " ") 
+            {
+                MessageBox.Show("Do not try to hack this!");
+                return false;
+            }
+            reader(com1);
+            if (b.Read())
+            {
+                if (password == (b["pass"].ToString()))
+                {
+                    b.Close();
+                    return true;
+                }
+                else
+                {
+                    b.Close();
+                    return false;
+                }
+            }
+            else
+            {
+                b.Close();
+                return false;
+            }
+        }
+
+        private void reader (string sqCommand)
+        {
+            
+            string string1;
+            string1= sqCommand;
+            SqlCommand Newcommand = new SqlCommand(string1, myConnection);
+            try
+            {
+                b = Newcommand.ExecuteReader();
+                if(b==null)
+                {
+                    MessageBox.Show("b is null");
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("this is crap" + e.ToString());
+            }
+            
         }
     }
 }

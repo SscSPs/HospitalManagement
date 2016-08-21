@@ -14,9 +14,13 @@ namespace HospitalManagement
         [STAThread]
         static void Main()
         {
+            bool flag2 = true;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            if(flag2)
+                Application.Run(new Form1());
+            else
+                Application.Run(new Form2(true, "admin"));
         }
     }
 }
